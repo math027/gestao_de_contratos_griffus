@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Currículos - Griffus Admin</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="../assets/css/admin.css">
+</head>
+<body>
+
+    <aside id="sidebar">
+        <div class="brand">
+            <button id="sidebarToggle" class="btn-menu"><i class="fa-solid fa-bars"></i></button>
+            <div class="brand-content">
+                <i class="fa-solid fa-layer-group"></i> 
+                <span class="brand-text">Griffus<span>Admin</span></span>
+            </div>
+        </div>
+        <div class="user-profile-mini">
+            <div class="user-avatar" style="background-image: url('https://ui-avatars.com/api/?name=Matheou+S&background=e91e63&color=fff&bold=true');"></div>
+            <div class="user-info"><h4>Matheou S.</h4><p>Administrador</p></div>
+        </div>
+        <nav>
+            <ul>
+                <div class="nav-category">Geral</div>
+                <li><a href="index.html" class="nav-link"><i class="fa-solid fa-chart-pie"></i> <span class="link-text">Dashboard</span></a></li>
+                <div class="nav-category">Comercial</div>
+                <li><a href="contratos.html" class="nav-link"><i class="fa-solid fa-file-contract"></i> <span class="link-text">Contratos</span></a></li>
+                <li><a href="curriculos.html" class="nav-link active"><i class="fa-solid fa-address-card"></i> <span class="link-text">Currículos</span></a></li>
+                <div class="nav-category">Sistema</div>
+                <li><a href="configuracoes.html" class="nav-link"><i class="fa-solid fa-gear"></i> <span class="link-text">Configurações</span></a></li>
+            </ul>
+        </nav>
+        <div style="padding: 20px;">
+            <a href="#" id="logoutBtn" class="nav-link logout-link"><i class="fa-solid fa-arrow-right-from-bracket"></i> <span class="link-text">Sair</span></a>
+        </div>
+    </aside>
+
+    <main class="main-content">
+        <header>
+            <div>
+                <h1>Banco de Currículos</h1>
+                <p style="color: #888; margin-top: 5px;">Recrutamento e Seleção</p>
+            </div>
+            <input type="text" class="search-box" placeholder="Buscar candidato ou vaga...">
+        </header>
+
+        <div class="card">
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Candidato</th>
+                            <th>Vaga Pretendida</th>
+                            <th>Experiência</th>
+                            <th>Data Envio</th>
+                            <th>Anexo</th>
+                            <th>Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td style="font-weight: 500;">João da Silva</td>
+                            <td>Promotor de Vendas</td>
+                            <td>3 anos</td>
+                            <td>28/01/2026</td>
+                            <td><a href="#" style="color: #d32f2f; text-decoration: none;"><i class="fa-solid fa-file-pdf"></i> cv_joao.pdf</a></td>
+                            <td>
+                                <button class="btn-griffus" style="padding: 8px 15px; font-size: 0.8rem;">
+                                    <i class="fa-regular fa-calendar-check"></i> Agendar
+                                </button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="font-weight: 500;">Maria Oliveira</td>
+                            <td>Gerente de Loja</td>
+                            <td>5 anos</td>
+                            <td>27/01/2026</td>
+                            <td><a href="#" style="color: #d32f2f; text-decoration: none;"><i class="fa-solid fa-file-pdf"></i> cv_maria.pdf</a></td>
+                            <td>
+                                <button class="btn-griffus" style="padding: 8px 15px; font-size: 0.8rem;">
+                                    <i class="fa-regular fa-calendar-check"></i> Agendar
+                                </button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+
+    <script src="js/curriculos.js"></script>
+    <script src="../assets/js/auth.js"></script>
+</body>
+</html>

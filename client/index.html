@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Início - Griffus Style</title>
+    <link rel="stylesheet" href="assets/css/global.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        .top-bar {
+            flex-shrink: 0;
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 40px;
+            background-color: white;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05); 
+            z-index: 10;
+        }
+
+        .nav-logo {
+            height: 45px;
+            width: auto;
+        }
+
+        .login-btn {
+            text-decoration: none;
+            color: var(--griffus-pink);
+            font-weight: 600;
+            border: 2px solid var(--griffus-pink);
+            padding: 8px 24px;
+            border-radius: 20px;
+            transition: all 0.3s ease;
+        }
+
+        .login-btn:hover {
+            background-color: var(--griffus-pink);
+            color: white;
+        }
+
+        .home-content {
+            flex: 1;
+            width: 100%;
+            display: flex;
+            flex-direction: row;
+            padding: 20px;
+            gap: 15px;
+            box-sizing: border-box;
+        }
+
+        .card-column {
+            flex: 1;
+            height: 100%;
+            border-radius: 20px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-decoration: none;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .card-column:hover {
+            transform: translateY(-5px);
+        }
+
+        .card-highlight {
+            background: linear-gradient(180deg, #4a0e68 0%, #b93478 100%); 
+            color: white;
+            box-shadow: 0 20px 40px rgba(74, 14, 104, 0.25);
+            z-index: 2;
+        }
+
+        .card-highlight .action-btn {
+            background-color: #66bb6a;
+            color: white;
+            padding: 15px 40px;
+            border-radius: 50px;
+            font-weight: 700;
+            text-transform: uppercase;
+            margin-top: 20px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        .card-highlight h1 {
+            font-size: 3rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+        }
+
+        .card-secondary {
+            background-color: #f2f2f5; 
+            border: 1px solid #e6e6e6;
+            color: var(--griffus-text-dark);
+        }
+
+        .card-secondary:hover {
+            background-color: #e8e8eb;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+        }
+
+        .card-secondary h2 {
+            font-size: 1.8rem;
+            color: #666;
+            margin-bottom: 10px;
+        }
+
+        .card-secondary p {
+            color: #888;
+            font-size: 1rem;
+        }
+
+        @media (max-width: 900px) {
+            .home-content {
+                flex-direction: column;
+                height: auto;
+            }
+            .card-column {
+                width: 100%;
+                min-height: 300px;
+            }
+            body.home-body {
+                height: auto;
+                overflow-y: auto;
+            }
+        }
+    </style>
+</head>
+<body class="home-body">
+
+    <div class="top-bar">
+        <img src="assets/images/logo-roxo.png" alt="Griffus Style" class="nav-logo">
+        <a href="login.html" class="login-btn">Login Admin</a>
+    </div>
+
+    <div class="home-content">
+        
+        <a href="#" class="card-column card-secondary">
+            <h2>Novidades</h2>
+            <p>Confira os lançamentos</p>
+        </a>
+
+        <a href="contratos.html" class="card-column card-highlight">
+            <h1>Contratos</h1>
+            <p>Gerencie seus documentos</p>
+            <span class="action-btn">Acessar</span>
+        </a>
+
+        <a href="#" class="card-column card-secondary">
+            <h2>Suporte</h2>
+            <p>Precisa de ajuda?</p>
+        </a>
+
+    </div>
+
+    <script src="assets/js/api.js"></script>
+</body>
+</html>

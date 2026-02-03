@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contratos - Griffus Admin</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="../assets/css/admin.css">
+</head>
+<body>
+
+    <aside id="sidebar">
+        <div class="brand">
+            <button id="sidebarToggle" class="btn-menu"><i class="fa-solid fa-bars"></i></button>
+            <div class="brand-content">
+                <i class="fa-solid fa-layer-group"></i> 
+                <span class="brand-text">Griffus<span>Admin</span></span>
+            </div>
+        </div>
+        
+        <div class="user-profile-mini">
+            <div class="user-avatar" style="background-image: url('https://ui-avatars.com/api/?name=Matheou+S&background=e91e63&color=fff&bold=true');"></div>
+            <div class="user-info">
+                <h4>Matheou S.</h4>
+                <p>Administrador</p>
+            </div>
+        </div>
+
+        <nav>
+            <ul>
+                <div class="nav-category">Geral</div>
+                <li>
+                    <a href="index.html" class="nav-link">
+                        <i class="fa-solid fa-chart-pie"></i> <span class="link-text">Dashboard</span>
+                    </a>
+                </li>
+                
+                <div class="nav-category">Comercial</div>
+                <li>
+                    <a href="contratos.html" class="nav-link active">
+                        <i class="fa-solid fa-file-contract"></i> <span class="link-text">Contratos</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="curriculos.html" class="nav-link">
+                        <i class="fa-solid fa-address-card"></i> <span class="link-text">Currículos</span>
+                    </a>
+                </li>
+                
+                <div class="nav-category">Sistema</div>
+                <li>
+                    <a href="configuracoes.html" class="nav-link">
+                        <i class="fa-solid fa-gear"></i> <span class="link-text">Configurações</span>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+        
+        <div style="padding: 20px;">
+            <a href="#" id="logoutBtn" class="nav-link logout-link">
+                <i class="fa-solid fa-arrow-right-from-bracket"></i> <span class="link-text">Sair do Sistema</span>
+            </a>
+        </div>
+    </aside>
+
+    <main class="main-content">
+        <header>
+            <div>
+                <h1>Gestão de Contratos</h1>
+                <p style="color: #888; margin-top: 5px;">Gerencie as solicitações de representantes</p>
+            </div>
+            <button class="btn-griffus">
+                <i class="fa-solid fa-plus"></i> Novo Contrato
+            </button>
+        </header>
+
+        <div class="card" style="padding: 15px 30px; display: flex; gap: 15px; align-items: center; justify-content: space-between;">
+            <div style="display: flex; gap: 15px;">
+                <span style="font-weight: 600; color: #555;">Filtrar por:</span>
+                <select style="border: none; background: transparent; color: var(--griffus-pink); font-weight: 600; cursor: pointer;">
+                    <option>Todos os Status</option>
+                    <option>Ativos</option>
+                    <option>Pendentes</option>
+                </select>
+            </div>
+            <input type="text" class="search-box" placeholder="Buscar por nome ou CNPJ...">
+        </div>
+
+        <div class="card">
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Representante / Empresa</th>
+                            <th>Tipo</th>
+                            <th>Data</th>
+                            <th>Status</th>
+                            <th>Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>#202401</td>
+                            <td><strong>Empresa Alpha Ltda</strong><br><span style="font-size: 0.8em; color: #999;">João da Silva</span></td>
+                            <td>Comercial</td>
+                            <td>15/01/2026</td>
+                            <td><span class="status-badge status-active">Ativo</span></td>
+                            <td>
+                                <a href="#" class="btn-icon-only" title="Visualizar"><i class="fa-solid fa-eye"></i></a>
+                                <a href="#" class="btn-icon-only" title="Baixar PDF"><i class="fa-solid fa-download"></i></a>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>#202402</td>
+                            <td><strong>Moda & Estilo S.A.</strong><br><span style="font-size: 0.8em; color: #999;">Maria Oliveira</span></td>
+                            <td>Marketing</td>
+                            <td>20/01/2026</td>
+                            <td><span class="status-badge status-pending">Pendente</span></td>
+                            <td>
+                                <a href="#" class="btn-icon-only" title="Visualizar"><i class="fa-solid fa-eye"></i></a>
+                                <a href="#" class="btn-icon-only" title="Editar"><i class="fa-solid fa-pen"></i></a>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>#202389</td>
+                            <td><strong>Varejo Center</strong><br><span style="font-size: 0.8em; color: #999;">Carlos Santos</span></td>
+                            <td>Auditoria</td>
+                            <td>10/11/2025</td>
+                            <td><span class="status-badge status-inactive">Encerrado</span></td>
+                            <td>
+                                <a href="#" class="btn-icon-only" title="Histórico"><i class="fa-solid fa-clock-rotate-left"></i></a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+
+    <div id="modalDetalhes" class="modal-overlay">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="modalTitle">Detalhes do Contrato</h2>
+                <button class="close-modal" onclick="fecharModal()">&times;</button>
+            </div>
+            <div class="modal-body" id="modalBody">
+                <p style="text-align: center; grid-column: span 2;">Carregando...</p>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="../assets/js/supabase.js"></script>
+    <script src="../assets/js/auth.js"></script>
+    <script src="js/contratos.js"></script>
+</body>
+</html>

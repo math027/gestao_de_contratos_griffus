@@ -1,0 +1,522 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
+:root {
+    /* Identidade Griffus */
+    --griffus-pink: #e91e63;
+    --griffus-pink-dark: #c2185b;
+    --griffus-pink-light: #fce4ec; /* Fundo suave para hovers */
+    --griffus-bg-light: #fafafa;
+    
+    /* Layout Admin */
+    --sidebar-bg: #121212;
+    --sidebar-text: #e0e0e0;
+    --sidebar-width: 260px;
+    --sidebar-collapsed-width: 80px;
+    
+    /* Elementos */
+    --text-primary: #212121;
+    --text-secondary: #757575;
+    --border-color: #eee;
+    --card-shadow: 0 4px 20px rgba(0,0,0,0.05);
+    --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif; /* Fonte oficial */
+}
+
+body {
+    display: flex;
+    background-color: #ffffff;
+    /* Padrão de fundo sutil igual à Home */
+    background-image: radial-gradient(circle, rgba(0, 0, 0, 0.03) 1.5px, transparent 1.5px);
+    background-size: 35px 35px;
+    color: var(--text-primary);
+    min-height: 100vh;
+}
+
+/* --- Sidebar (Menu Lateral) --- */
+#sidebar {
+    width: var(--sidebar-width);
+    background-color: var(--sidebar-bg);
+    color: var(--sidebar-text);
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    position: fixed;
+    transition: var(--transition);
+    z-index: 1000;
+    box-shadow: 4px 0 10px rgba(0,0,0,0.1);
+}
+
+#sidebar.collapsed { width: var(--sidebar-collapsed-width); }
+
+.brand {
+    display: flex;
+    align-items: center;
+    padding: 25px 20px;
+    height: 80px;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+}
+
+.brand-content {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    overflow: hidden;
+    white-space: nowrap;
+    margin-left: 10px;
+    transition: var(--transition);
+}
+
+.brand-text {
+    font-size: 1.3rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    color: #fff;
+    letter-spacing: 0.5px;
+}
+
+.brand-text span { color: var(--griffus-pink); } /* "Admin" em Rosa */
+
+.btn-menu {
+    background: none;
+    border: none;
+    color: rgba(255,255,255,0.7);
+    font-size: 1.2rem;
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.btn-menu:hover { color: var(--griffus-pink); }
+
+/* Perfil Mini */
+.user-profile-mini {
+    padding: 25px 20px;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+    background: rgba(255,255,255,0.02);
+}
+
+.user-avatar {
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    border: 2px solid var(--griffus-pink); /* Borda rosa no avatar */
+    background-size: cover;
+    background-position: center;
+}
+
+.user-info h4 {
+    font-size: 0.95rem;
+    color: #fff;
+    font-weight: 600;
+}
+
+.user-info p {
+    font-size: 0.75rem;
+    color: rgba(255,255,255,0.5);
+    margin-top: 2px;
+}
+
+/* Navegação */
+nav { flex: 1; padding: 20px 0; overflow-y: auto; }
+nav ul { list-style: none; }
+
+.nav-category {
+    padding: 15px 30px 5px;
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.4);
+    font-weight: 700;
+    letter-spacing: 1px;
+}
+
+.nav-link {
+    display: flex;
+    align-items: center;
+    padding: 14px 30px;
+    color: #aaa;
+    text-decoration: none;
+    transition: var(--transition);
+    gap: 15px;
+    border-left: 4px solid transparent; /* Indicador lateral */
+}
+
+.nav-link i {
+    width: 20px;
+    text-align: center;
+    font-size: 1.1rem;
+}
+
+/* Hover e Active - Estilo Griffus */
+.nav-link:hover {
+    color: #fff;
+    background-color: rgba(255,255,255,0.05);
+}
+
+.nav-link.active {
+    color: var(--griffus-pink);
+    background: linear-gradient(90deg, rgba(233, 30, 99, 0.15) 0%, transparent 100%);
+    border-left-color: var(--griffus-pink);
+}
+
+.logout-link {
+    margin-top: auto;
+    border-top: 1px solid rgba(255,255,255,0.05);
+    color: #ff5252;
+}
+
+.logout-link:hover {
+    background-color: rgba(255, 82, 82, 0.1);
+    color: #ff867c;
+}
+
+/* Esconder elementos quando colapsado */
+#sidebar.collapsed .brand-content,
+#sidebar.collapsed .user-info,
+#sidebar.collapsed .link-text,
+#sidebar.collapsed .nav-category {
+    display: none;
+    opacity: 0;
+}
+
+/* --- Main Content --- */
+.main-content {
+    flex: 1;
+    margin-left: var(--sidebar-width);
+    padding: 40px;
+    transition: var(--transition);
+}
+
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 35px;
+}
+
+header h1 {
+    font-size: 1.8rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    position: relative;
+}
+
+/* Detalhe rosa abaixo do título */
+header h1::after {
+    content: '';
+    display: block;
+    width: 40px;
+    height: 4px;
+    background-color: var(--griffus-pink);
+    border-radius: 2px;
+    margin-top: 5px;
+}
+
+/* Cards Griffus Style */
+.card {
+    background: white;
+    border-radius: 16px; /* Mais arredondado */
+    box-shadow: var(--card-shadow);
+    padding: 30px;
+    margin-bottom: 25px;
+    border: 1px solid rgba(0,0,0,0.03);
+}
+
+/* Tabelas Modernas */
+.table-container { overflow-x: auto; }
+
+table {
+    width: 100%;
+    border-collapse: separate; 
+    border-spacing: 0;
+    margin-top: 10px;
+}
+
+table th {
+    text-align: left;
+    padding: 18px 20px;
+    background-color: #fff;
+    font-weight: 600;
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    color: var(--griffus-pink); /* Cabeçalho rosa */
+    border-bottom: 2px solid var(--griffus-pink-light);
+    letter-spacing: 0.5px;
+}
+
+table td {
+    padding: 18px 20px;
+    border-bottom: 1px solid #f0f0f0;
+    font-size: 0.9rem;
+    color: #444;
+    vertical-align: middle;
+}
+
+table tr:hover td {
+    background-color: var(--griffus-pink-light); /* Hover rosa bem suave */
+    color: var(--griffus-pink-dark);
+}
+
+/* Badges (Status) */
+.status-badge {
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    display: inline-block;
+}
+
+.status-active { background-color: #e8f5e9; color: #2e7d32; }
+.status-pending { background-color: #fff8e1; color: #f57c00; }
+.status-inactive { background-color: #ffebee; color: #c62828; }
+
+/* Botões Griffus */
+.btn-griffus {
+    background-color: var(--griffus-pink);
+    color: white;
+    padding: 10px 24px;
+    border-radius: 30px; /* Estilo pílula */
+    font-weight: 600;
+    font-size: 0.9rem;
+    border: none;
+    cursor: pointer;
+    box-shadow: 0 4px 10px rgba(233, 30, 99, 0.3);
+    transition: var(--transition);
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.btn-griffus:hover {
+    background-color: var(--griffus-pink-dark);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 15px rgba(233, 30, 99, 0.4);
+    color: white;
+}
+
+.btn-icon-only {
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: #757575;
+    background: #f5f5f5;
+    margin-right: 5px;
+    transition: var(--transition);
+    text-decoration: none;
+    
+    /* Correções adicionadas para remover estilo padrão de botão */
+    border: none;         /* Remove a borda escura */
+    cursor: pointer;      /* Garante a mãozinha ao passar o mouse */
+    outline: none;        /* Remove contorno de foco padrão */
+}
+
+.btn-icon-only:hover {
+    background-color: var(--griffus-pink);
+    color: white;
+    transform: scale(1.1);
+}
+
+/* Inputs de busca no admin */
+.search-box {
+    padding: 10px 15px;
+    border: 1px solid #e0e0e0;
+    border-radius: 25px;
+    outline: none;
+    font-size: 0.9rem;
+    width: 250px;
+    transition: var(--transition);
+    background-color: #fcfcfc;
+}
+
+.search-box:focus {
+    border-color: var(--griffus-pink);
+    box-shadow: 0 0 0 3px rgba(233, 30, 99, 0.1);
+    background-color: #fff;
+    width: 280px; /* Expande levemente ao focar */
+}
+
+/* Responsividade */
+@media (max-width: 900px) {
+    #sidebar { margin-left: calc(var(--sidebar-width) * -1); }
+    #sidebar.active { margin-left: 0; }
+    .main-content { margin-left: 0; padding: 20px; }
+}
+
+/* --- Modal Styles --- */
+.modal-overlay {
+    display: none; /* Oculto por padrão */
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.6); /* Fundo escuro */
+    z-index: 2000;
+    justify-content: center;
+    align-items: center;
+    backdrop-filter: blur(3px);
+}
+
+.modal-overlay.active {
+    display: flex;
+}
+
+.modal-content {
+    background-color: #fff;
+    width: 90%;
+    max-width: 900px;
+    max-height: 90vh;
+    overflow-y: auto; /* Scroll interno */
+    border-radius: 12px;
+    box-shadow: 0 20px 50px rgba(0,0,0,0.3);
+    position: relative;
+    animation: slideUp 0.3s ease;
+}
+
+@keyframes slideUp {
+    from { transform: translateY(50px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+}
+
+.modal-header {
+    background-color: var(--griffus-pink);
+    color: white;
+    padding: 20px 30px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+}
+
+.modal-header h2 {
+    font-size: 1.2rem;
+    font-weight: 600;
+    margin: 0;
+}
+
+.close-modal {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 1.5rem;
+    cursor: pointer;
+    transition: transform 0.2s;
+}
+
+.close-modal:hover { transform: scale(1.1); }
+
+.modal-body {
+    padding: 30px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+}
+
+.section-title {
+    grid-column: span 2;
+    color: var(--griffus-pink);
+    border-bottom: 2px solid #fce4ec;
+    padding-bottom: 10px;
+    margin-top: 20px;
+    margin-bottom: 10px;
+    font-weight: 600;
+    font-size: 1.1rem;
+}
+
+.section-title:first-child { margin-top: 0; }
+
+.info-group {
+    display: flex;
+    flex-direction: column;
+}
+
+.info-group label {
+    font-size: 0.75rem;
+    color: #999;
+    text-transform: uppercase;
+    font-weight: 600;
+    margin-bottom: 4px;
+}
+
+.info-group span {
+    font-size: 0.95rem;
+    color: #333;
+    font-weight: 500;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 4px;
+}
+
+/* Área de documentos no modal */
+.docs-grid {
+    grid-column: span 2;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 15px;
+}
+
+.doc-link {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px;
+    background-color: #f8f9fa;
+    border: 1px solid #eee;
+    border-radius: 8px;
+    text-decoration: none;
+    color: #555;
+    transition: all 0.2s;
+}
+
+.doc-link:hover {
+    background-color: #e3f2fd;
+    border-color: #bbdefb;
+    color: #1976d2;
+}
+
+@media (max-width: 768px) {
+    .modal-body { grid-template-columns: 1fr; }
+    .section-title, .docs-grid { grid-column: span 1; }
+}
+
+/* --- Custom Scrollbar (WebKit - Chrome, Edge, Safari) --- */
+::-webkit-scrollbar {
+    width: 8px;  /* Largura vertical */
+    height: 8px; /* Altura horizontal */
+}
+
+/* Fundo da barra (o trilho) */
+::-webkit-scrollbar-track {
+    background: #f0f0f0; 
+    border-radius: 4px;
+}
+
+/* A parte que se move (o polegar) */
+::-webkit-scrollbar-thumb {
+    background-color: #ff80ab; /* Um rosa mais claro para não pesar */
+    border-radius: 4px;
+    border: 2px solid #f0f0f0; /* Cria um respiro entre a barra e o fundo */
+}
+
+/* Quando passa o mouse em cima da barra */
+::-webkit-scrollbar-thumb:hover {
+    background-color: var(--griffus-pink); /* Rosa oficial (#e91e63) */
+}
+
+/* --- Firefox Support --- */
+* {
+    scrollbar-width: thin;
+    scrollbar-color: var(--griffus-pink) #f0f0f0;
+}

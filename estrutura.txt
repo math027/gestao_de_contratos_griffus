@@ -1,0 +1,69 @@
+Gestão de contratos - Griffus/
+│
+├── client/                           # Frontend (HTML + JS)
+│   │
+│   ├── index.html                    # Página principal (cards + login)
+│   ├── login.html                    # Página de login
+│   ├── contratos.html                # Página de contratos (usuário)
+│   │
+│   ├── admin/                        # Área administrativa
+│   │   ├── index.html                # Dashboard admin
+│   │   ├── contratos.html            # Gestão de contratos
+│   │   ├── curriculos.html           # Gestão de currículos
+│   │   └── configuracoes.html        # Configurações
+│   │
+│   ├── assets/
+│   │   ├── css/
+│   │   │   ├── global.css
+│   │   │   ├── layout.css
+│   │   │   └── admin.css
+│   │   │
+│   │   ├── js/
+│   │   │   ├── supabase.js            # Configuração Supabase
+│   │   │   ├── auth.js                # Login / logout / sessão
+│   │   │   ├── api.js                 # Comunicação com backend
+│   │   │   ├── guards.js              # Proteção de páginas
+│   │   │
+│   │   ├── images/
+│   │   └── icons/
+│   │
+│   └── admin/
+│       └── js/
+│           ├── dashboard.js
+│           ├── contratos.js
+│           ├── curriculos.js
+│           └── configuracoes.js
+│
+├── server/                           # Backend Node.js
+│   │
+│   ├── src/
+│   │   ├── app.js                    # Configuração do Express
+│   │   ├── server.js                 # Inicialização do servidor
+│   │   │
+│   │   ├── routes/
+│   │   │   ├── auth.routes.js        # Rotas de autenticação
+│   │   │   ├── contratos.routes.js   # Rotas de contratos
+│   │   │   ├── curriculos.routes.js  # Rotas de currículos
+│   │   │   └── admin.routes.js       # Rotas administrativas
+│   │   │
+│   │   ├── controllers/
+│   │   │   ├── contratos.controller.js
+│   │   │   ├── curriculos.controller.js
+│   │   │   └── admin.controller.js
+│   │   │
+│   │   ├── services/
+│   │   │   ├── supabase.service.js   # Cliente Supabase (service key)
+│   │   │   └── contratos.service.js
+│   │   │
+│   │   ├── middlewares/
+│   │   │   ├── auth.middleware.js    # Validação de token Supabase
+│   │   │   └── admin.middleware.js   # Verifica role admin
+│   │   │
+│   │   └── utils/
+│   │       └── logger.js
+│   │
+│   ├── package.json
+│   └── .env.example
+│
+├── vercel.json                       # Configuração de deploy
+└── README.md
