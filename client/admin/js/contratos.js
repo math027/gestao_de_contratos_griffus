@@ -8,7 +8,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         try {
             const { data: contratos, error } = await window.supabaseClient
                 .from('contratos')
-                .select('id, razao_social, nome_socio, created_at, status, doc_contrato_social')
+                .select('*') // Precisa de tudo para preencher o contrato
                 .order('created_at', { ascending: false });
 
             if (error) throw error;
@@ -21,17 +21,13 @@ document.addEventListener('DOMContentLoaded', async () => {
     function renderTable(data) {
         tableBody.innerHTML = '';
         if (!data || data.length === 0) {
-            tableBody.innerHTML = `<tr><td colspan="6" style="text-align:center; padding: 20px;">Nenhum contrato encontrado.</td></tr>`;
+            tableBody.innerHTML = `<tr><td colspan="6" style="text-align:center;">Nenhum contrato encontrado.</td></tr>`;
             return;
         }
 
         data.forEach(c => {
             const date = new Date(c.created_at).toLocaleDateString('pt-BR');
             const statusClass = getStatusClass(c.status);
-            // Gera URL pública para o download rápido na tabela
-            const docUrl = c.doc_contrato_social 
-                ? window.supabaseClient.storage.from('documentos').getPublicUrl(c.doc_contrato_social).data.publicUrl 
-                : '#';
 
             const row = `
                 <tr>
@@ -41,8 +37,10 @@ document.addEventListener('DOMContentLoaded', async () => {
                     <td>${date}</td>
                     <td><span class="status-badge ${statusClass}">${c.status || 'pendente'}</span></td>
                     <td>
-                        <button onclick="verDetalhes('${c.id}')" class="btn-icon-only" title="Ver Tudo"><i class="fa-solid fa-eye"></i></button>
-                        <a href="${docUrl}" target="_blank" class="btn-icon-only" title="Contrato Social"><i class="fa-solid fa-download"></i></a>
+                        <button onclick="verDetalhes('${c.id}')" class="btn-icon-only" title="Ver Detalhes"><i class="fa-solid fa-eye"></i></button>
+                        <button onclick="gerarContratoWord('${c.id}')" class="btn-icon-only" title="Gerar Contrato Word" style="color: #1976d2;">
+                            <i class="fa-solid fa-file-word"></i>
+                        </button>
                     </td>
                 </tr>`;
             tableBody.innerHTML += row;
@@ -52,12 +50,78 @@ document.addEventListener('DOMContentLoaded', async () => {
     function getStatusClass(status) {
         if (!status) return 'status-pending';
         if (['ativo', 'aprovado'].includes(status.toLowerCase())) return 'status-active';
-        if (['rejeitado', 'inativo'].includes(status.toLowerCase())) return 'status-inactive';
-        return 'status-pending';
+        return 'status-inactive';
     }
 
     loadContratos();
 });
+
+// --- Função para Gerar o Word ---
+window.gerarContratoWord = async (id) => {
+    try {
+        const { data: contrato, error } = await window.supabaseClient
+            .from('contratos')
+            .select('*')
+            .eq('id', id)
+            .single();
+
+        if (error) throw error;
+
+        // DEBUG: Veja no console (F12) se os dados estão chegando do banco
+        console.log("Dados vindos do Banco:", contrato);
+
+        const response = await fetch('../assets/docs/modelo_contrato.docx');
+        if (!response.ok) throw new Error("Modelo não encontrado");
+        
+        const content = await response.arrayBuffer();
+        const zip = new PizZip(content);
+        const doc = new window.docxtemplater(zip, {
+            paragraphLoop: true,
+            linebreaks: true,
+        });
+
+        // AQUI ESTÁ A MÁGICA: O lado esquerdo (chave) é o que vai no Word.
+        // O lado direito (valor) é o que vem do Banco de Dados.
+        doc.render({
+            // Empresa
+            razaoSocial: contrato.razao_social || "EMPRESA NÃO INFORMADA",
+            cnpj: contrato.cnpj || "-",
+            // Montamos o endereço completo numa variável só para facilitar no Word
+            enderecoEmpresa: `${contrato.endereco || ''}, ${contrato.numero || ''} - ${contrato.bairro || ''}`,
+            cidadeEmpresa: contrato.cidade || "-",
+            ufEmpresa: contrato.uf || "-",
+            cepEmpresa: contrato.cep || "-",
+            
+            // Sócio
+            nomeSocio: contrato.nome_socio || "SÓCIO NÃO INFORMADO",
+            cpfSocio: contrato.cpf || "-",
+            rgSocio: contrato.rg || "-",
+            nacionalidadeSocio: contrato.nacionalidade || "Brasileiro",
+            estadoCivilSocio: contrato.estado_civil || "-",
+            profissaoSocio: contrato.profissao || "-",
+            // Montamos o endereço do sócio
+            enderecoSocio: `${contrato.endereco_socio || ''}, ${contrato.numero_socio || ''} - ${contrato.bairro_socio || ''}`,
+            cidadeSocio: contrato.cidade_socio || "-",
+            
+            // Datas
+            diaAtual: new Date().getDate(),
+            mesAtual: new Date().toLocaleString('pt-BR', { month: 'long' }),
+            anoAtual: new Date().getFullYear()
+        });
+
+        const out = doc.getZip().generate({
+            type: "blob",
+            mimeType: "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+        });
+
+        const nomeArquivo = `Contrato_${(contrato.razao_social || 'Sem_Nome').replace(/\s+/g, '_')}.docx`;
+        saveAs(out, nomeArquivo);
+
+    } catch (error) {
+        console.error("Erro ao gerar contrato:", error);
+        alert("Erro: " + error.message);
+    }
+};
 
 // --- Funções do Modal (Globais) ---
 
