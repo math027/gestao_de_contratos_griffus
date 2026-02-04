@@ -520,3 +520,12 @@ table tr:hover td {
     scrollbar-width: thin;
     scrollbar-color: var(--griffus-pink) #f0f0f0;
 }
+
+.status-info {
+    background-color: #e3f2fd;
+    color: #1976d2;
+    padding: 5px 10px;
+    border-radius: 15px;
+    font-size: 0.85em;
+    font-weight: 600;
+}

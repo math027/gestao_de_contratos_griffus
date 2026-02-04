@@ -6,6 +6,7 @@
     <title>Contratos - Griffus Admin</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="../assets/css/admin.css">
+    <link rel="shortcut icon" href="../assets/images/icone.png" type="image/x-icon">
 </head>
 <body>
 
@@ -19,7 +20,7 @@
         <div class="user-profile-mini">
             <div class="user-avatar" style="background-image: url('https://ui-avatars.com/api/?name=Matheou+S&background=e91e63&color=fff&bold=true');"></div>
             <div class="user-info">
-                <h4>Matheou S.</h4>
+                <h4>Matheus S.</h4>
                 <p>Administrador</p>
             </div>
         </div>
@@ -98,43 +99,36 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr>
-                            <td>#202401</td>
-                            <td><strong>Empresa Alpha Ltda</strong><br><span style="font-size: 0.8em; color: #999;">João da Silva</span></td>
-                            <td>Comercial</td>
-                            <td>15/01/2026</td>
-                            <td><span class="status-badge status-active">Ativo</span></td>
-                            <td>
-                                <a href="#" class="btn-icon-only" title="Visualizar"><i class="fa-solid fa-eye"></i></a>
-                                <a href="#" class="btn-icon-only" title="Baixar PDF"><i class="fa-solid fa-download"></i></a>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>#202402</td>
-                            <td><strong>Moda & Estilo S.A.</strong><br><span style="font-size: 0.8em; color: #999;">Maria Oliveira</span></td>
-                            <td>Marketing</td>
-                            <td>20/01/2026</td>
-                            <td><span class="status-badge status-pending">Pendente</span></td>
-                            <td>
-                                <a href="#" class="btn-icon-only" title="Visualizar"><i class="fa-solid fa-eye"></i></a>
-                                <a href="#" class="btn-icon-only" title="Editar"><i class="fa-solid fa-pen"></i></a>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>#202389</td>
-                            <td><strong>Varejo Center</strong><br><span style="font-size: 0.8em; color: #999;">Carlos Santos</span></td>
-                            <td>Auditoria</td>
-                            <td>10/11/2025</td>
-                            <td><span class="status-badge status-inactive">Encerrado</span></td>
-                            <td>
-                                <a href="#" class="btn-icon-only" title="Histórico"><i class="fa-solid fa-clock-rotate-left"></i></a>
-                            </td>
-                        </tr>
                     </tbody>
                 </table>
             </div>
         </div>
     </main>
+    
+    <div id="modalStatus" class="modal-overlay">
+        <div class="modal-content" style="max-width: 400px;">
+            <div class="modal-header">
+                <h2>Atualizar Status</h2>
+                <button class="close-modal" onclick="fecharModalStatus()">&times;</button>
+            </div>
+            <div class="modal-body" style="display: flex; flex-direction: column; gap: 15px;">
+                <input type="hidden" id="statusIdContrato">
+                
+                <label for="novoStatus">Selecione o novo status:</label>
+                <select id="novoStatus" class="search-box" style="width: 100%; color: #333;">
+                    <option value="novo">Novo</option>
+                    <option value="baixado">Baixado</option>
+                    <option value="pendente">Pendente</option>
+                    <option value="assinado">Assinado</option>
+                    <option value="arquivado">Arquivado</option>
+                </select>
+
+                <button onclick="salvarStatus()" class="btn-griffus" style="width: 100%; justify-content: center;">
+                    Salvar Alteração
+                </button>
+            </div>
+        </div>
+    </div>
 
     <div id="modalDetalhes" class="modal-overlay">
         <div class="modal-content">

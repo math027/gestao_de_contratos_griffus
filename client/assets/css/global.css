@@ -49,6 +49,7 @@ body.home-body {
 
 .header-strip {
     background-color: var(--griffus-pink);
+    color: #ffffff;
     padding: 25px 20px;
     text-align: center;
     border-bottom: 4px solid var(--griffus-pink-dark);

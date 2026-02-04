@@ -6,7 +6,7 @@
     <title>Início - Griffus Style</title>
     <link rel="stylesheet" href="assets/css/global.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
-    
+    <link rel="shortcut icon" href="assets/images/icone.png" type="image/x-icon">
     <style>
         .top-bar {
             flex-shrink: 0;
@@ -70,6 +70,31 @@
             transform: translateY(-5px);
         }
 
+        .card-left {
+            background: linear-gradient(180deg, #00054e 0%, #347db9 100%); 
+            color: white;
+            box-shadow: 0 20px 40px rgba(74, 14, 104, 0.25);
+            z-index: 2;
+        }
+
+        .card-left .action-btn {
+            background-color: #66bb6a;
+            color: white;
+            padding: 15px 40px;
+            border-radius: 50px;
+            font-weight: 700;
+            text-transform: uppercase;
+            margin-top: 20px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        .card-left h1 {
+            font-size: 3rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+        }
+
         .card-highlight {
             background: linear-gradient(180deg, #4a0e68 0%, #b93478 100%); 
             color: white;
@@ -95,24 +120,24 @@
             text-transform: uppercase;
         }
 
-        .card-secondary {
+        .card-right {
             background-color: #f2f2f5; 
             border: 1px solid #e6e6e6;
             color: var(--griffus-text-dark);
         }
 
-        .card-secondary:hover {
+        .card-right:hover {
             background-color: #e8e8eb;
             box-shadow: 0 10px 20px rgba(0,0,0,0.05);
         }
 
-        .card-secondary h2 {
+        .card-right h2 {
             font-size: 1.8rem;
             color: #666;
             margin-bottom: 10px;
         }
 
-        .card-secondary p {
+        .card-right p {
             color: #888;
             font-size: 1rem;
         }
@@ -142,18 +167,19 @@
 
     <div class="home-content">
         
-        <a href="#" class="card-column card-secondary">
-            <h2>Novidades</h2>
-            <p>Confira os lançamentos</p>
+        <a href="ficha.html" class="card-column card-left">
+            <h1>Ficha de seleção</h1>
+            <p>Preencha a ficha de seleção</p>
+            <span class="action-btn">Acessar</span>
         </a>
 
         <a href="contratos.html" class="card-column card-highlight">
             <h1>Contratos</h1>
-            <p>Gerencie seus documentos</p>
+            <p>Envie seus documentos</p>
             <span class="action-btn">Acessar</span>
         </a>
 
-        <a href="#" class="card-column card-secondary">
+        <a href="#" class="card-column card-right">
             <h2>Suporte</h2>
             <p>Precisa de ajuda?</p>
         </a>

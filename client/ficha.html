@@ -1,0 +1,504 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ficha de Seleção - Grupo Griffus/Belmax</title>
+    <link rel="stylesheet" href="assets/css/global.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="shortcut icon" href="assets/images/icone.png" type="image/x-icon">
+    <style>
+        .hidden-field {
+            display: none;
+        }
+        .radio-group {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+            height: 45px; /* Alinha altura com inputs */
+        }
+        .radio-group label {
+            margin: 0;
+            font-weight: normal;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            cursor: pointer;
+        }
+        .conditional-container {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            width: 100%;
+        }
+        textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            resize: vertical;
+            min-height: 80px;
+            font-family: inherit;
+        }
+    </style>
+</head>
+<body>
+    <div class="main-container">
+        <div class="header-strip">
+            <img src="assets/images/logo.webp" alt="Logo Grupo" class="logo">
+            <h2>Ficha de Seleção</h2>
+        </div>
+        <div class="content-body">
+            <form id="formSelecao">           
+                
+                <fieldset>
+                    <legend>Dados da Vaga</legend>
+                    
+                    <div class="form-group">
+                        <label for="empresa">Empresa</label>
+                        <select id="empresa" name="empresa" required>
+                            <option value="">Selecione...</option>
+                            <option value="Belmax">Belmax</option>
+                            <option value="Griffus">Griffus</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="cargo">Cargo Pretendido</label>
+                        <input type="text" id="cargo" name="cargo" list="listaCargos" placeholder="Selecione ou digite..." required>
+                        <datalist id="listaCargos">
+                            <option value="Vendedor Interno">
+                            <option value="Representante Comercial">
+                            <option value="Auxiliar Administrativo">
+                            <option value="Estoquista">
+                            <option value="Gerente de Vendas">
+                        </datalist>
+                    </div>
+                </fieldset>
+
+                <fieldset>
+                    <legend>Dados Pessoais</legend>
+
+                    <div class="form-group full-width">
+                        <label for="nomeCompleto">Nome Completo</label>
+                        <input type="text" id="nomeCompleto" name="nomeCompleto" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="estadoCivil">Estado Civil</label>
+                        <select id="estadoCivil" name="estadoCivil" required>
+                            <option value="">Selecione...</option>
+                            <option value="solteiro">Solteiro(a)</option>
+                            <option value="casado">Casado(a)</option>
+                            <option value="divorciado">Divorciado(a)</option>
+                            <option value="viuvo">Viúvo(a)</option>
+                            <option value="uniao_estavel">União Estável</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="cep">CEP</label>
+                        <input type="text" id="cep" name="cep" placeholder="00.000-000" maxlength="9" required>
+                    </div>
+                    <div class="form-group full-width">
+                        <label for="endereco">Endereço</label>
+                        <input type="text" id="endereco" name="endereco" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="bairro">Bairro</label>
+                        <input type="text" id="bairro" name="bairro" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="cidade">Cidade</label>
+                        <input type="text" id="cidade" name="cidade" required>
+                    </div>
+                    <div class="form-group small">
+                        <label for="uf">UF</label>
+                        <input type="text" id="uf" name="uf" maxlength="2" style="text-transform: uppercase;" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="celular">Celular / WhatsApp</label>
+                        <input type="tel" id="celular" name="celular" placeholder="(00) 90000-0000" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="email">E-mail</label>
+                        <input type="email" id="email" name="email" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="instagram">Instagram</label>
+                        <input type="text" id="instagram" name="instagram" placeholder="@usuario">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="facebook">Facebook</label>
+                        <input type="text" id="facebook" name="facebook">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="nacionalidade">Nacionalidade</label>
+                        <input type="text" id="nacionalidade" name="nacionalidade" value="Brasileira">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="naturalidade">Natural de (Cidade/UF)</label>
+                        <input type="text" id="naturalidade" name="naturalidade">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="dataNascimento">Data de Nascimento</label>
+                        <input type="date" id="dataNascimento" name="dataNascimento" required>
+                    </div>
+
+                    <div class="form-group small">
+                        <label for="idade">Idade</label>
+                        <input type="number" id="idade" name="idade" min="14" max="99">
+                    </div>
+
+                    <div class="form-group full-width">
+                        <label for="pai">Nome do Pai</label>
+                        <input type="text" id="pai" name="pai">
+                    </div>
+
+                    <div class="form-group full-width">
+                        <label for="mae">Nome da Mãe</label>
+                        <input type="text" id="mae" name="mae" required>
+                    </div>
+
+                    <div class="form-group full-width">
+                        <label>Tem Filhos?</label>
+                        <div class="conditional-container">
+                            <div class="radio-group">
+                                <label><input type="radio" name="temFilhos" value="sim" onchange="toggleFilhos(true)"> Sim</label>
+                                <label><input type="radio" name="temFilhos" value="nao" onchange="toggleFilhos(false)" checked> Não</label>
+                            </div>
+                            <div id="campoQtdFilhos" class="hidden-field" style="flex-grow: 1;">
+                                <input type="number" name="qtdFilhos" placeholder="Quantos?" min="1">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Possui Veículo?</label>
+                        <div class="radio-group">
+                            <label><input type="radio" name="veiculo" value="sim"> Sim</label>
+                            <label><input type="radio" name="veiculo" value="nao" checked> Não</label>
+                        </div>
+                    </div>
+                </fieldset>
+
+                <fieldset>
+                    <legend>Documentação</legend>
+                    
+                    <div class="form-group">
+                        <label for="cpf">CPF</label>
+                        <input type="text" id="cpf" name="cpf" maxlength="14" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="rg">RG</label>
+                        <input type="text" id="rg" name="rg" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="orgaoExp">Órgão Exp.</label>
+                        <input type="text" id="orgaoExp" name="orgaoExp" style="text-transform: uppercase;">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="dataEmissao">Data Emissão</label>
+                        <input type="date" id="dataEmissao" name="dataEmissao">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Carteira Reservista?</label>
+                        <div class="radio-group">
+                            <label><input type="radio" name="reservista" value="sim"> Sim</label>
+                            <label><input type="radio" name="reservista" value="nao" checked> Não</label>
+                        </div>
+                    </div>
+
+                    <div class="form-group full-width">
+                        <label>Possui Habilitação (CNH)?</label>
+                        <div class="conditional-container">
+                            <div class="radio-group">
+                                <label><input type="radio" name="cnh" value="sim" onchange="toggleCnh(true)"> Sim</label>
+                                <label><input type="radio" name="cnh" value="nao" onchange="toggleCnh(false)" checked> Não</label>
+                            </div>
+                            <div id="campoCatCnh" class="hidden-field" style="flex-grow: 1;">
+                                <input type="text" name="categoriaCnh" placeholder="Categoria (Ex: A, B, AB)" style="text-transform: uppercase;">
+                            </div>
+                        </div>
+                    </div>
+                </fieldset>
+
+                <fieldset>
+                    <legend>Escolaridade</legend>
+                    
+                    <div class="form-group">
+                        <label for="nivelEscolar">Nível</label>
+                        <select id="nivelEscolar" name="nivelEscolar">
+                            <option value="fundamental">Ensino Fundamental</option>
+                            <option value="medio">Ensino Médio</option>
+                            <option value="tecnico">Ensino Técnico</option>
+                            <option value="superior">Ensino Superior</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="statusEscolar">Status</label>
+                        <select id="statusEscolar" name="statusEscolar">
+                            <option value="completo">Completo</option>
+                            <option value="cursando">Incompleto (Cursando)</option>
+                            <option value="trancado">Incompleto (Trancado)</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group full-width">
+                        <label for="nomeCurso">Nome do Curso</label>
+                        <input type="text" id="nomeCurso" name="nomeCurso">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="anoConclusao">Ano Conclusão</label>
+                        <input type="number" id="anoConclusao" name="anoConclusao" placeholder="AAAA">
+                    </div>
+
+                    <div class="form-group full-width">
+                        <label for="instituicao">Instituição de Ensino</label>
+                        <input type="text" id="instituicao" name="instituicao">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="informatica">Conhecimento em Informática</label>
+                        <select id="informatica" name="informatica">
+                            <option value="nenhum">Nenhum</option>
+                            <option value="basico">Básico</option>
+                            <option value="intermediario">Intermediário</option>
+                            <option value="avancado">Avançado</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group full-width">
+                        <label for="outrosCursos">Outros Cursos / Observações</label>
+                        <textarea id="outrosCursos" name="outrosCursos"></textarea>
+                    </div>
+                </fieldset>
+
+                <fieldset>
+                    <legend>3 Últimas Experiências Profissionais</legend>
+                    
+                    <h4 style="width:100%; margin: 10px 0; color: #666; font-size: 0.9em; text-transform: uppercase;">Experiência Mais Recente</h4>
+                    <div class="form-group full-width">
+                        <label>Empresa</label>
+                        <input type="text" name="xp1_empresa">
+                    </div>
+                    <div class="form-group">
+                        <label>Cargo</label>
+                        <input type="text" name="xp1_cargo">
+                    </div>
+                    <div class="form-group">
+                        <label>Último Salário</label>
+                        <input type="text" name="xp1_salario" class="money">
+                    </div>
+                    <div class="form-group">
+                        <label>Admissão</label>
+                        <input type="date" name="xp1_admissao">
+                    </div>
+                    <div class="form-group">
+                        <label>Demissão</label>
+                        <input type="date" name="xp1_demissao">
+                    </div>
+                    <div class="form-group full-width">
+                        <label>Motivo da Saída</label>
+                        <input type="text" name="xp1_motivo">
+                    </div>
+
+                    <hr style="width: 100%; border: 0; border-top: 1px dashed #ccc; margin: 20px 0;">
+
+                    <h4 style="width:100%; margin: 10px 0; color: #666; font-size: 0.9em; text-transform: uppercase;">Penúltima Experiência</h4>
+                    <div class="form-group full-width">
+                        <label>Empresa</label>
+                        <input type="text" name="xp2_empresa">
+                    </div>
+                    <div class="form-group">
+                        <label>Cargo</label>
+                        <input type="text" name="xp2_cargo">
+                    </div>
+                    <div class="form-group">
+                        <label>Último Salário</label>
+                        <input type="text" name="xp2_salario" class="money">
+                    </div>
+                    <div class="form-group">
+                        <label>Admissão</label>
+                        <input type="date" name="xp2_admissao">
+                    </div>
+                    <div class="form-group">
+                        <label>Demissão</label>
+                        <input type="date" name="xp2_demissao">
+                    </div>
+                    <div class="form-group full-width">
+                        <label>Motivo da Saída</label>
+                        <input type="text" name="xp2_motivo">
+                    </div>
+
+                    <hr style="width: 100%; border: 0; border-top: 1px dashed #ccc; margin: 20px 0;">
+
+                    <h4 style="width:100%; margin: 10px 0; color: #666; font-size: 0.9em; text-transform: uppercase;">Antepenúltima Experiência</h4>
+                    <div class="form-group full-width">
+                        <label>Empresa</label>
+                        <input type="text" name="xp3_empresa">
+                    </div>
+                    <div class="form-group">
+                        <label>Cargo</label>
+                        <input type="text" name="xp3_cargo">
+                    </div>
+                    <div class="form-group">
+                        <label>Último Salário</label>
+                        <input type="text" name="xp3_salario" class="money">
+                    </div>
+                    <div class="form-group">
+                        <label>Admissão</label>
+                        <input type="date" name="xp3_admissao">
+                    </div>
+                    <div class="form-group">
+                        <label>Demissão</label>
+                        <input type="date" name="xp3_demissao">
+                    </div>
+                    <div class="form-group full-width">
+                        <label>Motivo da Saída</label>
+                        <input type="text" name="xp3_motivo">
+                    </div>
+                </fieldset>
+
+                <fieldset>
+                    <legend>Conhecendo Você</legend>
+                    
+                    <div class="form-group full-width">
+                        <label>O que mais te motiva e o que mais te revolta?</label>
+                        <textarea name="questMotivaRevolta"></textarea>
+                    </div>
+
+                    <div class="form-group full-width">
+                        <label>O que você gosta de fazer nos momentos de lazer?</label>
+                        <textarea name="questLazer"></textarea>
+                    </div>
+
+                    <div class="form-group full-width">
+                        <label>Quais são suas qualidades pessoais?</label>
+                        <textarea name="questQualidadesPessoais"></textarea>
+                    </div>
+
+                    <div class="form-group full-width">
+                        <label>Quais são suas qualidades profissionais?</label>
+                        <textarea name="questQualidadesProfissionais"></textarea>
+                    </div>
+
+                    <div class="form-group full-width">
+                        <label>Quais suas oportunidades de melhoria (Pontos a desenvolver)?</label>
+                        <textarea name="questMelhoria"></textarea>
+                    </div>
+
+                    <div class="form-group full-width">
+                        <label>Pratica algum esporte? Qual?</label>
+                        <input type="text" name="questEsporte">
+                    </div>
+
+                    <div class="form-group full-width">
+                        <label>Possui animal doméstico? Qual?</label>
+                        <input type="text" name="questAnimal">
+                    </div>
+
+                    <div class="form-group full-width">
+                        <label>Expectativas para seu futuro profissional e pessoal:</label>
+                        <textarea name="questFuturo"></textarea>
+                    </div>
+
+                    <div class="form-group full-width">
+                        <label>Fatores MAIS e MENOS importantes no ambiente de trabalho:</label>
+                        <textarea name="questFatoresAmbiente"></textarea>
+                    </div>
+
+                    <div class="form-group full-width">
+                        <label>Motivos para escolhermos você ao invés de outras pessoas:</label>
+                        <textarea name="questMotivosContratacao"></textarea>
+                    </div>
+                </fieldset>
+
+                <fieldset>
+                    <legend>Informações Finais</legend>
+
+                    <div class="form-group full-width">
+                        <label>Possui disponibilidade para trabalhar em qualquer horário?</label>
+                        <div class="conditional-container">
+                            <div class="radio-group">
+                                <label><input type="radio" name="dispHorario" value="sim" onchange="toggleDisp(true)" checked> Sim</label>
+                                <label><input type="radio" name="dispHorario" value="nao" onchange="toggleDisp(false)"> Não</label>
+                            </div>
+                            <div id="campoMotivoIndisp" class="hidden-field" style="flex-grow: 1;">
+                                <input type="text" name="motivoIndisponibilidade" placeholder="Informe a restrição de horário">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="pretensaoSalarial">Pretensão Salarial</label>
+                        <input type="text" id="pretensaoSalarial" name="pretensaoSalarial" class="money" placeholder="R$ 0,00">
+                    </div>
+
+                    <div class="form-group full-width">
+                        <label for="indicacao">Se foi indicado por alguém da empresa, cite o nome:</label>
+                        <input type="text" id="indicacao" name="indicacao">
+                    </div>
+                </fieldset>
+
+                <div class="button-container">
+                    <button type="submit">Enviar Ficha</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Lógica para mostrar/ocultar campos condicionais
+        
+        function toggleFilhos(show) {
+            const field = document.getElementById('campoQtdFilhos');
+            field.style.display = show ? 'block' : 'none';
+            const input = field.querySelector('input');
+            if(show) input.focus();
+            else input.value = '';
+        }
+
+        function toggleCnh(show) {
+            const field = document.getElementById('campoCatCnh');
+            field.style.display = show ? 'block' : 'none';
+            const input = field.querySelector('input');
+            if(show) input.focus();
+            else input.value = '';
+        }
+
+        function toggleDisp(isAvailable) {
+            // Se NÃO tem disponibilidade (isAvailable = false), mostra o campo de justificativa
+            const field = document.getElementById('campoMotivoIndisp');
+            field.style.display = !isAvailable ? 'block' : 'none';
+            const input = field.querySelector('input');
+            if(!isAvailable) input.focus();
+            else input.value = '';
+        }
+
+        // Script simples para máscara de moeda (opcional, para melhor UX)
+        document.querySelectorAll('.money').forEach(input => {
+            input.addEventListener('input', function(e) {
+                let value = e.target.value.replace(/\D/g, '');
+                value = (value / 100).toFixed(2) + '';
+                value = value.replace(".", ",");
+                value = value.replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1.");
+                e.target.value = 'R$ ' + value;
+            });
+        });
+    </script>
+</body>
+</html>

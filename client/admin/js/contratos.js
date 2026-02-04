@@ -3,12 +3,12 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     if (!window.supabaseClient) return;
 
-    // --- Listagem Inicial ---
-    async function loadContratos() {
+    // Tornar loadContratos acessível globalmente para recarregar após ações
+    window.loadContratos = async function() {
         try {
             const { data: contratos, error } = await window.supabaseClient
                 .from('contratos')
-                .select('*') // Precisa de tudo para preencher o contrato
+                .select('*')
                 .order('created_at', { ascending: false });
 
             if (error) throw error;
@@ -27,7 +27,9 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         data.forEach(c => {
             const date = new Date(c.created_at).toLocaleDateString('pt-BR');
-            const statusClass = getStatusClass(c.status);
+            // Garante que o status esteja em minúsculo para comparação
+            const rawStatus = (c.status || 'novo').toLowerCase();
+            const statusClass = getStatusClass(rawStatus);
 
             const row = `
                 <tr>
@@ -35,11 +37,22 @@ document.addEventListener('DOMContentLoaded', async () => {
                     <td><strong>${c.razao_social || '-'}</strong><br><span style="font-size: 0.8em; color: #999;">${c.nome_socio || '-'}</span></td>
                     <td>Comercial</td>
                     <td>${date}</td>
-                    <td><span class="status-badge ${statusClass}">${c.status || 'pendente'}</span></td>
+                    <td><span class="status-badge ${statusClass}">${rawStatus}</span></td>
                     <td>
-                        <button onclick="verDetalhes('${c.id}')" class="btn-icon-only" title="Ver Detalhes"><i class="fa-solid fa-eye"></i></button>
-                        <button onclick="gerarContratoWord('${c.id}')" class="btn-icon-only" title="Gerar Contrato Word" style="color: #1976d2;">
+                        <button onclick="verDetalhes('${c.id}')" class="btn-icon-only" title="Ver Detalhes">
+                            <i class="fa-solid fa-eye"></i>
+                        </button>
+                        
+                        <button onclick="gerarContratoWord('${c.id}')" class="btn-icon-only" title="Baixar Word" style="color: #1976d2;">
                             <i class="fa-solid fa-file-word"></i>
+                        </button>
+
+                        <button onclick="abrirModalStatus('${c.id}', '${rawStatus}')" class="btn-icon-only" title="Editar Status" style="color: #f39c12;">
+                            <i class="fa-solid fa-pen-to-square"></i>
+                        </button>
+
+                        <button onclick="excluirContrato('${c.id}')" class="btn-icon-only" title="Excluir" style="color: #d32f2f;">
+                            <i class="fa-solid fa-trash"></i>
                         </button>
                     </td>
                 </tr>`;
@@ -48,17 +61,83 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
     function getStatusClass(status) {
-        if (!status) return 'status-pending';
-        if (['ativo', 'aprovado'].includes(status.toLowerCase())) return 'status-active';
-        return 'status-inactive';
+        switch (status) {
+            case 'novo': return 'status-info';       // Azul ou neutro (Crie essa classe no CSS se precisar)
+            case 'baixado': return 'status-active';  // Verde ou Roxo
+            case 'assinado': return 'status-active'; // Verde
+            case 'pendente': return 'status-pending';// Amarelo/Laranja
+            case 'arquivado': return 'status-inactive'; // Cinza
+            default: return 'status-pending';
+        }
     }
 
-    loadContratos();
+    window.loadContratos();
 });
 
-// --- Função para Gerar o Word ---
+// --- Função Excluir ---
+window.excluirContrato = async (id) => {
+    if (!confirm("Tem certeza que deseja excluir este contrato? Essa ação não pode ser desfeita.")) return;
+
+    try {
+        const { error } = await window.supabaseClient
+            .from('contratos')
+            .delete()
+            .eq('id', id);
+
+        if (error) throw error;
+        
+        alert("Contrato excluído com sucesso!");
+        window.loadContratos(); // Recarrega a tabela
+    } catch (error) {
+        console.error("Erro ao excluir:", error);
+        alert("Erro ao excluir contrato.");
+    }
+};
+
+// --- Funções de Status (Editar Manualmente) ---
+window.abrirModalStatus = (id, currentStatus) => {
+    const modal = document.getElementById('modalStatus');
+    document.getElementById('statusIdContrato').value = id;
+    document.getElementById('novoStatus').value = currentStatus;
+    modal.classList.add('active');
+};
+
+window.fecharModalStatus = () => {
+    document.getElementById('modalStatus').classList.remove('active');
+};
+
+window.salvarStatus = async () => {
+    const id = document.getElementById('statusIdContrato').value;
+    const novoStatus = document.getElementById('novoStatus').value;
+    const btnSalvar = document.querySelector('#modalStatus button.btn-griffus');
+
+    btnSalvar.textContent = "Salvando...";
+    btnSalvar.disabled = true;
+
+    try {
+        const { error } = await window.supabaseClient
+            .from('contratos')
+            .update({ status: novoStatus })
+            .eq('id', id);
+
+        if (error) throw error;
+
+        window.fecharModalStatus();
+        window.loadContratos();
+    } catch (error) {
+        console.error("Erro ao atualizar status:", error);
+        alert("Erro ao atualizar status.");
+    } finally {
+        btnSalvar.textContent = "Salvar Alteração";
+        btnSalvar.disabled = false;
+    }
+};
+
+
+// --- Função para Gerar o Word (Com Atualização Automática de Status) ---
 window.gerarContratoWord = async (id) => {
     try {
+        // 1. Busca os dados
         const { data: contrato, error } = await window.supabaseClient
             .from('contratos')
             .select('*')
@@ -67,43 +146,29 @@ window.gerarContratoWord = async (id) => {
 
         if (error) throw error;
 
-        // DEBUG: Veja no console (F12) se os dados estão chegando do banco
-        console.log("Dados vindos do Banco:", contrato);
-
+        // 2. Gera o Arquivo (Lógica do DocxTemplater)
         const response = await fetch('../assets/docs/modelo_contrato.docx');
         if (!response.ok) throw new Error("Modelo não encontrado");
         
         const content = await response.arrayBuffer();
         const zip = new PizZip(content);
-        const doc = new window.docxtemplater(zip, {
-            paragraphLoop: true,
-            linebreaks: true,
-        });
+        const doc = new window.docxtemplater(zip, { paragraphLoop: true, linebreaks: true });
 
-        // AQUI ESTÁ A MÁGICA: O lado esquerdo (chave) é o que vai no Word.
-        // O lado direito (valor) é o que vem do Banco de Dados.
         doc.render({
-            // Empresa
             razaoSocial: contrato.razao_social || "EMPRESA NÃO INFORMADA",
             cnpj: contrato.cnpj || "-",
-            // Montamos o endereço completo numa variável só para facilitar no Word
             enderecoEmpresa: `${contrato.endereco || ''}, ${contrato.numero || ''} - ${contrato.bairro || ''}`,
             cidadeEmpresa: contrato.cidade || "-",
             ufEmpresa: contrato.uf || "-",
             cepEmpresa: contrato.cep || "-",
-            
-            // Sócio
             nomeSocio: contrato.nome_socio || "SÓCIO NÃO INFORMADO",
             cpfSocio: contrato.cpf || "-",
             rgSocio: contrato.rg || "-",
             nacionalidadeSocio: contrato.nacionalidade || "Brasileiro",
             estadoCivilSocio: contrato.estado_civil || "-",
             profissaoSocio: contrato.profissao || "-",
-            // Montamos o endereço do sócio
             enderecoSocio: `${contrato.endereco_socio || ''}, ${contrato.numero_socio || ''} - ${contrato.bairro_socio || ''}`,
             cidadeSocio: contrato.cidade_socio || "-",
-            
-            // Datas
             diaAtual: new Date().getDate(),
             mesAtual: new Date().toLocaleString('pt-BR', { month: 'long' }),
             anoAtual: new Date().getFullYear()
@@ -117,20 +182,34 @@ window.gerarContratoWord = async (id) => {
         const nomeArquivo = `Contrato_${(contrato.razao_social || 'Sem_Nome').replace(/\s+/g, '_')}.docx`;
         saveAs(out, nomeArquivo);
 
+        // 3. ATUALIZAÇÃO AUTOMÁTICA: Muda status para 'baixado' se ainda não for
+        if (contrato.status === "novo") {
+            await window.supabaseClient
+                .from('contratos')
+                .update({ status: 'baixado' })
+                .eq('id', id);
+            
+            // Atualiza a tabela visualmente
+            window.loadContratos();
+        }
+
     } catch (error) {
         console.error("Erro ao gerar contrato:", error);
         alert("Erro: " + error.message);
     }
 };
 
-// --- Funções do Modal (Globais) ---
-
+// --- Funções do Modal de Detalhes (Mantidas Iguais, apenas referência) ---
 window.verDetalhes = async (id) => {
+    // ... (Mantenha o código original do verDetalhes aqui)
+    // Para economizar espaço na resposta, assumi que você manterá o original
+    // Mas certifique-se de que ele ainda exista!
+    
+    // Vou reinserir o código original do verDetalhes abaixo para garantir que nada quebre:
     const modal = document.getElementById('modalDetalhes');
     const modalBody = document.getElementById('modalBody');
     const modalTitle = document.getElementById('modalTitle');
 
-    // Abre o modal com loading
     modal.classList.add('active');
     modalBody.innerHTML = '<p style="text-align: center; grid-column: span 2; padding: 20px;">Carregando dados...</p>';
     modalTitle.innerText = `Contrato #${id.slice(0,8)}`;
@@ -144,14 +223,12 @@ window.verDetalhes = async (id) => {
 
         if (error) throw error;
 
-        // Função auxiliar para criar campos
         const field = (label, value) => `
             <div class="info-group">
                 <label>${label}</label>
                 <span>${value || '-'}</span>
             </div>`;
 
-        // Função para gerar links de documentos
         const docLink = (path, label) => {
             if (!path) return '';
             const url = window.supabaseClient.storage.from('documentos').getPublicUrl(path).data.publicUrl;
@@ -162,7 +239,6 @@ window.verDetalhes = async (id) => {
                 </a>`;
         };
 
-        // Monta o HTML detalhado
         modalBody.innerHTML = `
             <div class="section-title">Dados da Empresa</div>
             ${field('Razão Social', data.razao_social)}
@@ -173,7 +249,7 @@ window.verDetalhes = async (id) => {
             ${field('Endereço', `${data.endereco}, ${data.numero} - ${data.bairro}`)}
             ${field('Cidade/UF', `${data.cidade}/${data.uf}`)}
             ${field('CEP', data.cep)}
-
+            
             <div class="section-title">Dados Bancários</div>
             ${field('Banco', data.banco)}
             ${field('Agência', data.agencia)}
@@ -203,7 +279,6 @@ window.verDetalhes = async (id) => {
                 ${docLink(data.doc_end_socio_comp, 'Endereço Sócio')}
             </div>
         `;
-
     } catch (error) {
         console.error(error);
         modalBody.innerHTML = `<p style="color: red; text-align: center;">Erro ao carregar detalhes: ${error.message}</p>`;
@@ -214,7 +289,6 @@ window.fecharModal = () => {
     document.getElementById('modalDetalhes').classList.remove('active');
 };
 
-// Fechar ao clicar fora
 document.getElementById('modalDetalhes').addEventListener('click', (e) => {
     if (e.target.id === 'modalDetalhes') window.fecharModal();
 });
