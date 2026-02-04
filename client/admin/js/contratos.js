@@ -47,7 +47,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                             <i class="fa-solid fa-eye"></i>
                         </button>
                         
-                        <button onclick="gerarContratoWord('${c.id}')" class="btn-icon-only" title="Baixar Word" style="color: #1976d2;">
+                        <button onclick="gerarContratoWord('${c.id}')" class="btn-icon-only" title="Baixar documentos" style="color: #1976d2;">
                             <i class="fa-solid fa-file-word"></i>
                         </button>
 
@@ -56,7 +56,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                         </button>
 
                         <button onclick="excluirContrato('${c.id}')" class="btn-icon-only" title="Excluir" style="color: #d32f2f;">
-                            <i class="fa-solid fa-trash"></i>
+                            <i class="fa-solid fa-trash"></i>d
                         </button>
                     </td>
                 </tr>`;
@@ -275,7 +275,7 @@ window.gerarContratoWord = async (id) => {
         saveAs(zipContent, `${nomeLimpo}.zip`);
 
         // Atualiza status para baixado
-        if (contrato.status !== 'baixado' && contrato.status !== 'assinado') {
+        if (contrato.status === "novo") {
             await window.supabaseClient
                 .from('contratos')
                 .update({ status: 'baixado' })
