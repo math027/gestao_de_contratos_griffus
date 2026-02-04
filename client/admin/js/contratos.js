@@ -12,7 +12,11 @@ document.addEventListener('DOMContentLoaded', async () => {
                 .order('created_at', { ascending: false });
 
             if (error) throw error;
-            renderTable(contratos);
+            
+            todosContratos = contratos;
+            renderTable(todosContratos);
+            
+            aplicarFiltros(); 
         } catch (error) {
             console.error('Erro:', error);
         }
@@ -59,6 +63,32 @@ document.addEventListener('DOMContentLoaded', async () => {
             tableBody.innerHTML += row;
         });
     }
+
+    function aplicarFiltros() {
+        const termo = document.getElementById('inputBusca').value.toLowerCase();
+        const statusFiltro = document.getElementById('filtroStatus').value;
+
+        const filtrados = todosContratos.filter(c => {
+            // Verifica o Status (se vazio, aceita todos)
+            const statusMatch = statusFiltro === "" || (c.status || 'novo').toLowerCase() === statusFiltro;
+
+            // Verifica Texto (Nome, Razão Social ou CNPJ)
+            const razao = (c.razao_social || '').toLowerCase();
+            const nome = (c.nome_socio || '').toLowerCase();
+            const cnpj = (c.cnpj || '').toLowerCase(); // Pega CNPJ mesmo com pontos
+            const searchMatch = razao.includes(termo) || nome.includes(termo) || cnpj.includes(termo);
+
+            return statusMatch && searchMatch;
+        });
+
+        renderTable(filtrados);
+    }
+
+    const elBusca = document.getElementById('inputBusca');
+    const elStatus = document.getElementById('filtroStatus');
+
+    if (elBusca) elBusca.addEventListener('input', aplicarFiltros);
+    if (elStatus) elStatus.addEventListener('change', aplicarFiltros);
 
     function getStatusClass(status) {
         switch (status) {
@@ -136,8 +166,16 @@ window.salvarStatus = async () => {
 
 // --- Função para Gerar o Word (Com Atualização Automática de Status) ---
 window.gerarContratoWord = async (id) => {
+    const btnIcon = document.querySelector(`button[onclick="gerarContratoWord('${id}')"] i`);
+    const originalClass = btnIcon ? btnIcon.className : '';
+    
+    // Feedback visual de carregamento
+    if (btnIcon) {
+        btnIcon.className = "fa-solid fa-spinner fa-spin";
+    }
+
     try {
-        // 1. Busca os dados
+        // 1. Busca os dados do contrato
         const { data: contrato, error } = await window.supabaseClient
             .from('contratos')
             .select('*')
@@ -146,14 +184,17 @@ window.gerarContratoWord = async (id) => {
 
         if (error) throw error;
 
-        // 2. Gera o Arquivo (Lógica do DocxTemplater)
+        // ---------------------------------------------------------
+        // PARTE 1: GERAR O ARQUIVO WORD (Igual ao anterior)
+        // ---------------------------------------------------------
         const response = await fetch('../assets/docs/modelo_contrato.docx');
-        if (!response.ok) throw new Error("Modelo não encontrado");
+        if (!response.ok) throw new Error("Modelo de contrato não encontrado");
         
         const content = await response.arrayBuffer();
-        const zip = new PizZip(content);
-        const doc = new window.docxtemplater(zip, { paragraphLoop: true, linebreaks: true });
+        const zipWord = new PizZip(content);
+        const doc = new window.docxtemplater(zipWord, { paragraphLoop: true, linebreaks: true });
 
+        // Preenche os dados
         doc.render({
             razaoSocial: contrato.razao_social || "EMPRESA NÃO INFORMADA",
             cnpj: contrato.cnpj || "-",
@@ -174,28 +215,81 @@ window.gerarContratoWord = async (id) => {
             anoAtual: new Date().getFullYear()
         });
 
-        const out = doc.getZip().generate({
+        const wordBlob = doc.getZip().generate({
             type: "blob",
             mimeType: "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
         });
 
-        const nomeArquivo = `Contrato_${(contrato.razao_social || 'Sem_Nome').replace(/\s+/g, '_')}.docx`;
-        saveAs(out, nomeArquivo);
+        // ---------------------------------------------------------
+        // PARTE 2: CRIAR O ZIP FINAL E BAIXAR ANEXOS
+        // ---------------------------------------------------------
+        const zipFinal = new JSZip(); // Usa a nova biblioteca JSZip
+        const nomeLimpo = (contrato.razao_social || 'Contrato').replace(/[^a-zA-Z0-9]/g, '_');
+        
+        // Adiciona o contrato Word na raiz do ZIP
+        zipFinal.file(`Contrato_${nomeLimpo}.docx`, wordBlob);
 
-        // 3. ATUALIZAÇÃO AUTOMÁTICA: Muda status para 'baixado' se ainda não for
-        if (contrato.status === "novo") {
+        // Cria pasta para anexos
+        const folderAnexos = zipFinal.folder("Documentos_Anexados");
+
+        // Lista de documentos possíveis no banco
+        const listaDocs = [
+            { col: 'doc_contrato_social', nome: 'Contrato_Social' },
+            { col: 'doc_cartao_cnpj', nome: 'Cartao_CNPJ' },
+            { col: 'doc_end_empresa', nome: 'Endereco_Empresa' },
+            { col: 'doc_core', nome: 'CORE' },
+            { col: 'doc_cpf_socio', nome: 'CPF_Socio' },
+            { col: 'doc_identidade_socio', nome: 'RG_Socio' },
+            { col: 'doc_end_socio_comp', nome: 'Endereco_Socio' }
+        ];
+
+        // Processa downloads em paralelo
+        const downloadPromises = listaDocs.map(async (item) => {
+            const path = contrato[item.col];
+            if (path) {
+                try {
+                    // Baixa o arquivo do Supabase Storage
+                    const { data: blobAnexo, error: errDown } = await window.supabaseClient.storage
+                        .from('documentos')
+                        .download(path);
+
+                    if (!errDown && blobAnexo) {
+                        // Pega a extensão original do arquivo (pdf, jpg, png, etc)
+                        const ext = path.split('.').pop();
+                        folderAnexos.file(`${item.nome}.${ext}`, blobAnexo);
+                    }
+                } catch (e) {
+                    console.warn(`Erro ao baixar ${item.nome}:`, e);
+                }
+            }
+        });
+
+        await Promise.all(downloadPromises);
+
+        // ---------------------------------------------------------
+        // PARTE 3: GERAR DOWNLOAD E ATUALIZAR STATUS
+        // ---------------------------------------------------------
+        
+        // Gera o arquivo ZIP final
+        const zipContent = await zipFinal.generateAsync({ type: "blob" });
+        saveAs(zipContent, `${nomeLimpo}.zip`);
+
+        // Atualiza status para baixado
+        if (contrato.status !== 'baixado' && contrato.status !== 'assinado') {
             await window.supabaseClient
                 .from('contratos')
                 .update({ status: 'baixado' })
                 .eq('id', id);
             
-            // Atualiza a tabela visualmente
             window.loadContratos();
         }
 
     } catch (error) {
-        console.error("Erro ao gerar contrato:", error);
-        alert("Erro: " + error.message);
+        console.error("Erro ao gerar pacote:", error);
+        alert("Erro ao gerar o pacote de arquivos: " + error.message);
+    } finally {
+        // Restaura o ícone
+        if (btnIcon) btnIcon.className = originalClass;
     }
 };
 

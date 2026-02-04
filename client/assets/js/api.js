@@ -53,7 +53,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     cidade_socio: formData.get('cidadeSocio'),
                     uf_socio: formData.get('ufSocio'),
                     
-                    status: 'pendente' // Status inicial padrão
+                    status: 'novo' // Status inicial padrão
                 };
 
                 // Lista de campos de arquivos (IDs do HTML)
